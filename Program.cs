@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.EntityFrameworkCore;
-using ASbackend.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using ASbackend;
+using ASbackend.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

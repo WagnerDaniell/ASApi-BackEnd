@@ -1,4 +1,5 @@
-using ASbackend.Models;
+using ASbackend.Domain.Entities;
+using ASbackend.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ASbackend.Controllers

@@ -1,5 +1,6 @@
-﻿using ASbackend.Models;
-using ASbackend.Services;
+﻿using ASbackend.Application.Services;
+using ASbackend.Domain.Entities;
+using ASbackend.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
