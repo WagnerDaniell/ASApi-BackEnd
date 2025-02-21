@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ASbackend.Services;
 using Microsoft.EntityFrameworkCore;
 using ASbackend.Application.UseCase;
+using ASbackend.Application.DTOs;
 
 namespace ASbackend.Controllers
 {
@@ -44,7 +45,7 @@ namespace ASbackend.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<ActionResult<dynamic>> Authenticated([FromBody] UserLogin model)
+        public async Task<ActionResult<dynamic>> Authenticated([FromBody] AuthRequest model)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x=> x.Email.ToLower().Trim() == model.Email);
 
