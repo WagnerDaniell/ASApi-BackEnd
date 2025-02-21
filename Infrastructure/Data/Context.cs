@@ -1,6 +1,7 @@
+using ASbackend.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace ASbackend.Models
+namespace ASbackend.Infrastructure.Data
 {
     public class Context : DbContext
     {
