@@ -3,22 +3,15 @@ using System.Security.Claims;
 using System.Text;
 using ASbackend.Domain.Entities;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Extensions.Configuration;
 
 namespace ASbackend.Application.Services
 {
     public class TokenService
     {
-        private readonly string _secretKey = string.Empty;
-
-        public TokenService(IConfiguration configuration)
-        {
-            _secretKey = configuration["JwtSettings:SecretKey"]!;
-        }
-        public string GenerateToken(User user)
+        public static string GenerateToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_secretKey);
+            var key = Encoding.ASCII.GetBytes(Settings.SecretKey);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
 
