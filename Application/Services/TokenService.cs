@@ -30,8 +30,8 @@ namespace ASbackend.Application.Services
                 Expires = DateTime.UtcNow.AddHours(2),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            var AcessToken = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(AcessToken);
         }
     }
 }

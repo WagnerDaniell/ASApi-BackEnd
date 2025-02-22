@@ -36,9 +36,9 @@ namespace ASbackend.Controllers
 
             if (response is OkObjectResult okResponse)
             {
-                var token = okResponse.Value?.GetType().GetProperty("token")?.GetValue(okResponse.Value);
+                var AcessToken = okResponse.Value?.GetType().GetProperty("AcessToken")?.GetValue(okResponse.Value);
 
-                return Created("", new { token });
+                return Created("", new { AcessToken });
             }
             else
             {
@@ -48,31 +48,28 @@ namespace ASbackend.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<ActionResult<dynamic>> Authenticated([FromBody] AuthRequest model)
+        public async Task<ActionResult<dynamic>> Authenticated([FromBody] AuthRequest LoginDTO)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x=> x.Email.ToLower().Trim() == model.Email);
+            var useCase = new LoginUseCase(_tokenService, _context);
 
-            if (user == null)
+            var response = await useCase.ExecuteAuthenticated(LoginDTO);
+
+            if (response is BadRequestObjectResult badRequest)
             {
-                return NotFound(new{message = "Email not found!"});
-            };
-
-            bool isPasswordValid = BCrypt.Net.BCrypt.Verify(model.Password, user.Password);
-
-            if (isPasswordValid == false)
-            {
-                return NotFound(new{message = "Password incorrect!"});
+                return badRequest;
             }
 
-            var AcessToken = _tokenService.GenerateToken(user);
-
-            user.Password = "";
-
-            return Ok(new
+            if (response is OkObjectResult okResponse)
             {
-                token = AcessToken
-            });
-            
+                var token = okResponse.Value?.GetType().GetProperty("token")?.GetValue(okResponse.Value);
+
+                return Ok(new { token });
+            }
+            else
+            {
+                return BadRequest();
+            }
+
         }   
     };
 };
