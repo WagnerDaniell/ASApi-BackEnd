@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using ASbackend;
 using ASbackend.Infrastructure.Data;
+using ASbackend.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<Context>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("ConnectionDB"))
 );
+
+builder.Services.AddScoped<TokenService>();
 
 builder.Services.AddCors(opcoes =>
 {
@@ -23,7 +26,9 @@ builder.Services.AddCors(opcoes =>
     });
 });
 
-var key = Encoding.ASCII.GetBytes(Settings.SecretKey);
+var _secretKey = builder.Configuration["JwtSettings:SecretKey"]!;
+
+var key = Encoding.ASCII.GetBytes(_secretKey);
 
 builder.Services.AddAuthentication(x =>
 {

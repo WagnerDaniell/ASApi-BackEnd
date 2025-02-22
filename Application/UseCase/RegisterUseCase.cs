@@ -9,12 +9,14 @@ namespace ASbackend.Application.UseCase
     public class RegisterUseCase
     {
         private readonly Context _context;
+        private readonly TokenService _tokenService;
 
 
-        public RegisterUseCase(Context context)
+        public RegisterUseCase(Context context, TokenService tokenService)
         {
 
             _context = context;
+            _tokenService = tokenService;
         }
 
         public async Task<IActionResult> ExecuteRegister(User user)
@@ -33,9 +35,9 @@ namespace ASbackend.Application.UseCase
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
 
-            var token = TokenService.GenerateToken(user);
+            var AcessToken = _tokenService.GenerateToken(user);
 
-            return new OkObjectResult(new { token });
+            return new OkObjectResult(new { AcessToken });
         }
     }
 }

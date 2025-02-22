@@ -13,17 +13,19 @@ namespace ASbackend.Controllers
     public class AuthController : ControllerBase
     {        
         private readonly Context _context;
+        private readonly TokenService _tokenService;
 
-        public AuthController(Context context){
+        public AuthController(Context context, TokenService tokenService){
 
             _context = context;
+            _tokenService = tokenService;
         }
 
         [HttpPost]
         [Route("register")]
         public async Task<ActionResult<User>> RegisterUsers(User user)
         {
-            var useCase = new RegisterUseCase(_context);
+            var useCase = new RegisterUseCase(_context, _tokenService);
 
             var response = await useCase.ExecuteRegister(user);
 
@@ -62,13 +64,13 @@ namespace ASbackend.Controllers
                 return NotFound(new{message = "Password incorrect!"});
             }
 
-            var token = TokenService.GenerateToken(user);
+            var AcessToken = _tokenService.GenerateToken(user);
 
             user.Password = "";
 
             return Ok(new
             {
-                token = token
+                token = AcessToken
             });
             
         }   

@@ -8,10 +8,16 @@ namespace ASbackend.Application.Services
 {
     public class TokenService
     {
-        public static string GenerateToken(User user)
+        private readonly string _secretKey;
+
+        public TokenService(IConfiguration configuration)
+        {
+            _secretKey = configuration["JwtSettings:SecretKey"]!;
+        }
+        public string GenerateToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(Settings.SecretKey);
+            var key = Encoding.ASCII.GetBytes(_secretKey);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
 
