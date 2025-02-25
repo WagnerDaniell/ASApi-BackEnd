@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ASbackend.Application.UseCase;
-using ASbackend.Application.DTOs;
 using ASbackend.Application.Services;
 using ASbackend.Infrastructure.Data;
 using ASbackend.Domain.Entities;
+using ASbackend.Application.DTOs.Request;
+using ASbackend.Application.DTOs.Response;
 
 namespace ASbackend.Controllers
 {
@@ -23,53 +24,39 @@ namespace ASbackend.Controllers
 
         [HttpPost]
         [Route("register")]
-        public async Task<ActionResult<User>> RegisterUsers(User user)
+        public async Task<ActionResult<AuthResponse>> RegisterUsers(User user)
         {
             var useCase = new RegisterUseCase(_context, _tokenService);
 
-            var response = await useCase.ExecuteRegister(user);
+            var responseRegister = await useCase.ExecuteRegister(user);
 
-            if (response is BadRequestObjectResult badRequest)
+            if (responseRegister == null)
             {
-                return badRequest;
+                return BadRequest("Falha na geração do Token");
             }
 
-            if (response is OkObjectResult okResponse)
-            {
-                var AcessToken = okResponse.Value?.GetType().GetProperty("AcessToken")?.GetValue(okResponse.Value);
-
-                return Created("", new { AcessToken });
-            }
-            else
-            {
-                return BadRequest();
-            }
+            return Created(string.Empty, responseRegister.Value);
         }
 
         [HttpPost]
         [Route("login")]
-        public async Task<ActionResult<dynamic>> Authenticated([FromBody] AuthRequest LoginDTO)
+        public async Task<ActionResult<AuthResponse>> Login([FromBody] AuthRequest LoginDTO)
         {
             var useCase = new LoginUseCase(_tokenService, _context);
 
-            var response = await useCase.ExecuteAuthenticated(LoginDTO);
+            var responseLogin = await useCase.ExecuteLogin(LoginDTO);
 
-            if (response is BadRequestObjectResult badRequest)
+            if (responseLogin.Result is UnauthorizedObjectResult)
             {
-                return badRequest;
-            }
-
-            if (response is OkObjectResult okResponse)
+                return Unauthorized("Passowrd incorrect");
+            }else if(responseLogin.Result is NotFoundObjectResult)
             {
-                var token = okResponse.Value?.GetType().GetProperty("token")?.GetValue(okResponse.Value);
-
-                return Ok(new { token });
+                return NotFound("User NotFound");
             }
             else
             {
-                return BadRequest();
+                return Ok(responseLogin.Value);
             }
-
-        }   
+        }
     };
 };

@@ -1,3 +1,4 @@
+using ASbackend.Application.UseCase;
 using ASbackend.Domain.Entities;
 using ASbackend.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -17,22 +18,23 @@ namespace ASbackend.Controllers
         } 
 
         [HttpGet("viewall")]
-        public async Task<ActionResult<IEnumerable<User>>> Viewallusers(){
-            return await _context.Users.ToListAsync();
+        public async Task<ActionResult> Viewallusers(){
+
+            var useCase = new ManagerUseCase(_context);
+
+            var responseViewAll = await useCase.ExecuteViewAll();
+
+            return Ok(responseViewAll);
         }
 
         [HttpDelete("{Id}")]
         public async Task<ActionResult> ExcluirPessoaAsync(Guid Id){
-            User? User = await _context.Users.FindAsync(Id);
 
-        if(User == null){
-            return NotFound();
-        }
+            var useCase = new ManagerUseCase(_context);
 
-            _context.Remove(User);
-            await _context.SaveChangesAsync();
+            var reponseDeleteUser = await useCase.ExecuteDeleteUser(Id);
 
-            return Ok();
+            return Ok(reponseDeleteUser);
         }
     };
 };

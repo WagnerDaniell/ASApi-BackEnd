@@ -1,4 +1,5 @@
-﻿using ASbackend.Application.Services;
+﻿using ASbackend.Application.DTOs.Response;
+using ASbackend.Application.Services;
 using ASbackend.Domain.Entities;
 using ASbackend.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -19,16 +20,10 @@ namespace ASbackend.Application.UseCase
             _tokenService = tokenService;
         }
 
-        public async Task<IActionResult> ExecuteRegister(User user)
+        public async Task<ActionResult<AuthResponse>> ExecuteRegister(User user)
         {
 
             var ExistingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
-
-            if (ExistingUser != null)
-            {
-                return new BadRequestObjectResult(new { message = "Email já utilizado!" });
-
-            };
 
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
@@ -37,7 +32,8 @@ namespace ASbackend.Application.UseCase
 
             var AcessToken = _tokenService.GenerateToken(user);
 
-            return new OkObjectResult(new { AcessToken });
+            return new AuthResponse("Cadastro efetuado com sucesso!", AcessToken);
+
         }
     }
 }

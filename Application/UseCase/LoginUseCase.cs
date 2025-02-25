@@ -1,6 +1,8 @@
-﻿using ASbackend.Application.DTOs;
+﻿using ASbackend.Application.DTOs.Request;
+using ASbackend.Application.DTOs.Response;
 using ASbackend.Application.Services;
 using ASbackend.Infrastructure.Data;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,31 +18,27 @@ namespace ASbackend.Application.UseCase
             _tokenService = tokenService;
             _context = context;
         }
-        public async Task<IActionResult> ExecuteAuthenticated([FromBody] AuthRequest LoginDTO)
+        public async Task<ActionResult<AuthResponse>> ExecuteLogin(AuthRequest LoginDTO)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Email.ToLower().Trim() == LoginDTO.Email);
 
             if (user == null)
             {
-                return new NotFoundObjectResult(new { message = "Email not found!" });
+                return new NotFoundObjectResult(string.Empty);
             }
-            ;
 
             bool isPasswordValid = BCrypt.Net.BCrypt.Verify(LoginDTO.Password, user.Password);
 
             if (isPasswordValid == false)
             {
-                return new NotFoundObjectResult(new { message = "Password incorrect!" });
+                return new UnauthorizedObjectResult(string.Empty);
             }
 
             var AcessToken = _tokenService.GenerateToken(user);
 
             user.Password = "";
 
-            return new OkObjectResult(new
-            {
-                token = AcessToken
-            });
+            return new AuthResponse("login efetuado com sucesso!", AcessToken);
         }
     }
 }

@@ -1,4 +1,4 @@
-namespace ASbackend.Application.DTOs
+namespace ASbackend.Application.DTOs.Request
 {
     public class AuthRequest
     {
