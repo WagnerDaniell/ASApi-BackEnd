@@ -46,17 +46,7 @@ namespace ASbackend.Controllers
 
             var responseLogin = await useCase.ExecuteLogin(LoginDTO);
 
-            if (responseLogin.Result is UnauthorizedObjectResult)
-            {
-                return Unauthorized("Passowrd incorrect");
-            }else if(responseLogin.Result is NotFoundObjectResult)
-            {
-                return NotFound("User NotFound");
-            }
-            else
-            {
-                return Ok(responseLogin.Value);
-            }
+            return Ok(responseLogin.Value);
         }
     };
 };
