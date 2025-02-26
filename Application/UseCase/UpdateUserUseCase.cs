@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ASbackend.Controllers;
 using ASbackend.Infrastructure.Data;
+using ASbackend.Application.DTOs.Response;
 
 namespace ASbackend.Application.UseCase
 {
@@ -13,13 +14,13 @@ namespace ASbackend.Application.UseCase
         {
             _context = context;
         }
-        public async Task<ActionResult> ExecuteUpdateUser(Guid Id, [FromBody] User Update)
+        public async Task<ActionResult<MessageResponse>> ExecuteUpdateUser(Guid Id, [FromBody] User Update)
         {
             User? ExistingUser = await _context.Users.FindAsync(Id);
 
             if (ExistingUser == null)
             {
-                return new BadRequestObjectResult("User not found!");
+                return new MessageResponse("Erro: User not found!");
             };
 
             ExistingUser.Email = Update.Email;
@@ -34,7 +35,7 @@ namespace ASbackend.Application.UseCase
 
             await _context.SaveChangesAsync();
 
-            return new NoContentResult();
+            return new MessageResponse("Sucess: User Atualizado com sucesso!");
         }
     }
 }

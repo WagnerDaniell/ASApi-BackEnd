@@ -30,11 +30,6 @@ namespace ASbackend.Controllers
 
             var responseRegister = await useCase.ExecuteRegister(user);
 
-            if (responseRegister == null)
-            {
-                return BadRequest("Falha na geração do Token");
-            }
-
             return Created(string.Empty, responseRegister.Value);
         }
 

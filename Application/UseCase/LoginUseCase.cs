@@ -24,21 +24,21 @@ namespace ASbackend.Application.UseCase
 
             if (user == null)
             {
-                return new AuthResponse("User NotFound", string.Empty);
+                return new AuthResponse("Error: User não encontrado", string.Empty);
             }
 
             bool isPasswordValid = BCrypt.Net.BCrypt.Verify(LoginDTO.Password, user.Password);
 
             if (isPasswordValid == false)
             {
-                return new AuthResponse("Password incorrect!", string.Empty);
+                return new AuthResponse("Error: Password incorrect", string.Empty);
             }
 
             var AcessToken = _tokenService.GenerateToken(user);
 
             user.Password = "";
 
-            return new AuthResponse("login efetuado com sucesso!", AcessToken);
+            return new AuthResponse("Sucess: login efetuado com sucesso", AcessToken);
         }
     }
 }

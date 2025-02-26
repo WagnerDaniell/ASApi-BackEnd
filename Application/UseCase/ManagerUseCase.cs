@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ASbackend.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using ASbackend.Application.DTOs.Response;
 
 namespace ASbackend.Application.UseCase
 {
@@ -17,19 +18,19 @@ namespace ASbackend.Application.UseCase
             return await _context.Users.ToListAsync();
         }
         //
-        public async Task<ActionResult> ExecuteDeleteUser(Guid Id)
+        public async Task<ActionResult<MessageResponse>> ExecuteDeleteUser(Guid Id)
         {
             User? User = await _context.Users.FindAsync(Id);
 
             if (User == null)
             {
-                return new NotFoundObjectResult("User não encontrado");
+                return new MessageResponse("Error: User não encontrado");
             }
 
             _context.Remove(User);
             await _context.SaveChangesAsync();
 
-            return new OkObjectResult("User deletado com Sucesso!");
+            return new MessageResponse("Sucess: User deletado com Sucesso!");
         }
     }
 }

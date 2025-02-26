@@ -30,9 +30,14 @@ namespace ASbackend.Application.UseCase
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
 
-            var AcessToken = _tokenService.GenerateToken(user);
+            var accessToken = _tokenService.GenerateToken(user);
 
-            return new AuthResponse("Cadastro efetuado com sucesso!", AcessToken);
+            if(accessToken == null)
+            {
+                return new AuthResponse("Error", "Token não gerado!");
+            };
+
+            return new AuthResponse("Sucess: Cadastro efetuado com sucesso!", accessToken);
 
         }
     }

@@ -28,7 +28,7 @@ namespace ASbackend.Controllers
         }
 
         [HttpDelete("{Id}")]
-        public async Task<ActionResult> ExcluirPessoaAsync(Guid Id){
+        public async Task<ActionResult> DeleteUserAsync(Guid Id){
 
             var useCase = new ManagerUseCase(_context);
 
