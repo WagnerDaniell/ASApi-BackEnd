@@ -24,7 +24,7 @@ namespace ASbackend.Controllers
 
         [HttpPost]
         [Route("register")]
-        public async Task<ActionResult<AuthResponse>> RegisterUsers(User user)
+        public async Task<ActionResult> RegisterUsers(User user)
         {
             var useCase = new RegisterUseCase(_context, _tokenService);
 
@@ -35,7 +35,7 @@ namespace ASbackend.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<ActionResult<AuthResponse>> Login([FromBody] AuthRequest LoginDTO)
+        public async Task<ActionResult> Login([FromBody] AuthRequest LoginDTO)
         {
             var useCase = new LoginUseCase(_tokenService, _context);
 

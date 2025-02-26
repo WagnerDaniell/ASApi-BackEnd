@@ -31,7 +31,7 @@ namespace ASbackend.Application.UseCase
 
             if (isPasswordValid == false)
             {
-                return new AuthResponse("Error: Password incorrect", string.Empty);
+                return new AuthResponse("Error: Password errado", string.Empty);
             }
 
             var AcessToken = _tokenService.GenerateToken(user);
