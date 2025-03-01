@@ -35,7 +35,12 @@ namespace ASbackend.Middleware
                 context.Response.StatusCode = StatusCodes.Status404NotFound;
                 await context.Response.WriteAsJsonAsync(new { message = ex.Message });
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro interno: {Message}", ex.Message);
+                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                await context.Response.WriteAsJsonAsync(new { message = "Erro interno" });
 
-        }
+            }
     }
 }
