@@ -29,7 +29,7 @@ namespace ASbackend.Middleware
                 await context.Response.WriteAsJsonAsync(new { message = ex.Message });
 
             }
-            catch(NotFoundException ex)
+            catch (NotFoundException ex)
             {
                 _logger.LogWarning(ex, "Erro de NotFound: {Message}", ex.Message);
                 context.Response.StatusCode = StatusCodes.Status404NotFound;
@@ -40,7 +40,7 @@ namespace ASbackend.Middleware
                 _logger.LogError(ex, "Erro interno: {Message}", ex.Message);
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 await context.Response.WriteAsJsonAsync(new { message = "Erro interno" });
-
             }
+        }
     }
 }

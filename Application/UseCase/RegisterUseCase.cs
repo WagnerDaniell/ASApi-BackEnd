@@ -3,6 +3,7 @@ using ASbackend.Application.Services;
 using ASbackend.Domain.Entities;
 using ASbackend.Domain.Exceptions;
 using ASbackend.Infrastructure.Data;
+using ASbackend.Validators;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,6 +24,14 @@ namespace ASbackend.Application.UseCase
 
         public async Task<ActionResult<AuthResponse>> ExecuteRegister(User user)
         {
+            var Validator = new RegisterValidator();
+
+            var result = Validator.Validate(user);
+
+            if (!result.IsValid)
+            {
+                throw new UnauthorizedException("Dados informados não estão em um formato valido!");
+            }
 
             var ExistingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
 
