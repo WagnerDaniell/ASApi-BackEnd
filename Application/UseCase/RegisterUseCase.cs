@@ -1,6 +1,7 @@
 ﻿using ASbackend.Application.DTOs.Response;
 using ASbackend.Application.Services;
 using ASbackend.Domain.Entities;
+using ASbackend.Domain.Exceptions;
 using ASbackend.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -34,7 +35,7 @@ namespace ASbackend.Application.UseCase
 
             if(accessToken == null)
             {
-                return new AuthResponse("Error", "Token não gerado!");
+                throw new UnauthorizedException("Error: Token não gerado");
             };
 
             return new AuthResponse("Sucess: Cadastro efetuado com sucesso!", accessToken);

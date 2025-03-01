@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ASbackend.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using ASbackend.Application.DTOs.Response;
+using ASbackend.Domain.Exceptions;
 
 namespace ASbackend.Application.UseCase
 {
@@ -24,7 +25,7 @@ namespace ASbackend.Application.UseCase
 
             if (User == null)
             {
-                return new MessageResponse("Error: User não encontrado");
+                throw new NotFoundException("Error: User não encontrado");
             }
 
             _context.Remove(User);

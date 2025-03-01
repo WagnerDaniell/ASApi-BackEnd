@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ASbackend.Controllers;
 using ASbackend.Infrastructure.Data;
 using ASbackend.Application.DTOs.Response;
+using ASbackend.Domain.Exceptions;
 
 namespace ASbackend.Application.UseCase
 {
@@ -20,7 +21,7 @@ namespace ASbackend.Application.UseCase
 
             if (ExistingUser == null)
             {
-                return new MessageResponse("Erro: User not found!");
+                throw new NotFoundException("Erro: User not found!");
             };
 
             ExistingUser.Email = Update.Email;

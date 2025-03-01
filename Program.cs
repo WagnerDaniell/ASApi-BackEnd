@@ -6,6 +6,7 @@ using System.Text;
 using ASbackend;
 using ASbackend.Infrastructure.Data;
 using ASbackend.Application.Services;
+using ASbackend.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,6 +52,8 @@ builder.Services.AddAuthentication(x =>
 builder.Services.AddControllers();
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 

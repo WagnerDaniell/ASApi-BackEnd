@@ -1,6 +1,7 @@
 ﻿using ASbackend.Application.DTOs.Request;
 using ASbackend.Application.DTOs.Response;
 using ASbackend.Application.Services;
+using ASbackend.Domain.Exceptions;
 using ASbackend.Infrastructure.Data;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -24,21 +25,21 @@ namespace ASbackend.Application.UseCase
 
             if (user == null)
             {
-                return new AuthResponse("Error: User não encontrado", string.Empty);
+                throw new NotFoundException("Error: User não encontrado");
             }
 
             bool isPasswordValid = BCrypt.Net.BCrypt.Verify(LoginDTO.Password, user.Password);
 
             if (isPasswordValid == false)
             {
-                return new AuthResponse("Error: Senha incorreta", string.Empty);
+                throw new UnauthorizedException("Error: Senha incorreta");
             }
 
-            var AcessToken = _tokenService.GenerateToken(user);
+            var accessToken = _tokenService.GenerateToken(user);
 
             user.Password = "";
 
-            return new AuthResponse("Sucess: login efetuado com sucesso", AcessToken);
+            return new AuthResponse("Sucess: login efetuado com sucesso", accessToken);
         }
     }
 }
